@@ -1,0 +1,64 @@
+# 生产环境配置
+server:
+  port: 8080
+  error:
+    include-stacktrace: never  # 生产环境不暴露堆栈信息
+    include-message: never
+
+spring:
+  # 生产环境数据库配置
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:data_platform}?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+  
+  # JPA生产环境配置
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        generate_statistics: false
+
+# 生产环境日志配置
+logging:
+  level:
+    com.example.mydataplatform: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
+    root: WARN
+  file:
+    name: logs/my-data-platform.log
+    max-size: 100MB
+    max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+
+# 生产环境监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus  # 生产环境只暴露必要端点
+  endpoint:
+    health:
+      show-details: when-authorized
+    shutdown:
+      enabled: false  # 生产环境禁用shutdown端点
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+
+

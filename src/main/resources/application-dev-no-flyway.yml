@@ -1,0 +1,59 @@
+# 开发环境配置（禁用Flyway）
+server:
+  port: 8069
+
+spring:
+  # 开发环境数据库配置
+  datasource:
+    url: jdbc:mysql://10.20.85.20:3307/my_dp_1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useServerPrepStmts=true
+    username: mysql
+    password: N9dmAD8Zfw
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  # JPA开发环境配置
+  jpa:
+    hibernate:
+      ddl-auto: update  # 使用JPA自动建表，而不是Flyway
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  
+  # 禁用Flyway
+  flyway:
+    enabled: false
+  
+  # 开发工具配置
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+# 开发环境日志配置
+logging:
+  level:
+    com.example.mydataplatform: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    root: INFO
+  file:
+    name: logs/my-data-platform-dev.log
+
+# 开发环境监控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 开发环境暴露所有端点
+  endpoint:
+    shutdown:
+      enabled: true
